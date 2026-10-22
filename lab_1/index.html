@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Layout HTML Tanpa CSS</title>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header >
+        <table bgcolor="E8DCC4" width="100%" cellpadding="10">
+            <tr>
+                <td width="20%" align="center"> <img src="https://upload.wikimedia.org/wikipedia/id/c/c6/Logo_UIN_Sunan_Kalijaga.png?utm_source=id.wikipedia.org&utm_campaign=index&utm_content=original" 
+                alt="Logo Website" width="200"></td>
+                <td>
+                    <h1 align="center">Judul Website Saya</h1>
+                    <p align="center">Deskripsi atau slogan website di sini</p>
+                </td>
+            </tr>
+        </table>
+    </header>
+
+    <hr> 
+
+    <!-- MENU BAR (NAVIGASI) -->
+    <nav align="center">
+        <a href="#home">Beranda</a> | 
+        <a href="#about">Tentang Kami</a> | 
+        <a href="#services">Layanan</a> | 
+        <a href="#contact">Kontak</a>
+    </nav>
+
+    <hr> 
+
+    <!-- <body bgcolor="lightblue"> -->
+
+    <hr> 
+    <!-- TAMPILAN UTAMA (SIDEBAR & KONTEN) MENGGUNAKAN TABEL -->
+    <table border="1" width="100%" cellpadding="10">
+        <tr valign="top">
+            
+            <!-- SIDEBAR (Kolom Kiri) -->
+            <td width="25%" bgcolor="#33BBAA">
+                <aside>
+                    <h3>Menu Sidebar</h3>
+                    <ul>
+                        <li><a href="#">Kategori 1</a></li>
+                        <li><a href="#">Kategori 2</a></li>
+                        <li><a href="#">Kategori 3</a></li>
+                    </ul>
+                    <hr>
+                    <h4>Pengumuman</h4>
+                    <p>Ini adalah area teks tambahan pada sidebar.</p>
+                </aside>
+            </td>
+
+            <!-- KONTEN UTAMA (Kolom Kanan) -->
+            <td width="75%">
+                <main>
+                    <h2>Artikel Utama</h2>
+                    <p>Ini adalah bagian konten utama dari halaman web. Tanpa CSS, tata letak samping-sampingan seperti ini dibuat menggunakan atribut tabel HTML standar.</p>
+                    <p>Anda dapat memasukkan teks, gambar, atau elemen HTML lainnya di dalam area konten ini.</p>
+                    <h2>Data Jadwal Pertemuan</h2>
+                    <table border="1" width="100%" cellpadding="8" cellspacing="0">
+                        <caption><strong>Jadwal Kuliah dan Kegiatan</strong></caption>
+                        <!-- BARIS HEADER -->
+                        <tr bgcolor="#f2f2f2">
+                            <th rowspan="2">No</th>
+                            <th rowspan="2">Hari</th>
+                            <th colspan="2">Sesi Kuliah</th>
+                            <th rowspan="2">Ruangan</th>
+                        </tr>
+                        <tr bgcolor="#f2f2f2">
+                            <th>Mata Kuliah</th>
+                            <th>Waktu</th>
+                        </tr>
+                    
+                        <!-- BARIS DATA 1 -->
+                        <tr bgcolor="#ffcccc">
+                            <td align="center" bgcolor="#ffcccc">1</td>
+                            <td rowspan="2" align="center">Senin</td>
+                            <td>Pemrograman Platform Web</td>
+                            <td align="center">08.00 - 10.30</td>
+                            <td align="center">Lab 01</td>
+                        </tr>
+                    
+                        <!-- BARIS DATA 2 -->
+                        <tr>
+                            <td align="center">2</td>
+                            <td>Basis Data</td>
+                            <td align="center">11.00 - 13.30</td>
+                            <td align="center">Lab 03</td>
+                        </tr>
+                    
+                        <!-- BARIS DATA 3 -->
+                        <tr>
+                            <td align="center">3</td>
+                            <td align="center">Selasa</td>
+                            <td>Jaringan Komputer</td>
+                            <td align="center">09.00 - 11.30</td>
+                            <td align="center">Teori 02</td>
+                        </tr>
+                    
+                        <!-- BARIS FOOTER TABEL -->
+                        <tr>
+                            <td colspan="4" align="right"><strong>Total Sesi Per Minggu:</strong></td>
+                            <td align="center"><strong>3 Sesi</strong></td>
+                        </tr>
+                    </table>
+                     <section>
+                        <h2>Menampilkan Gambar</h2>
+                        <p>Berikut adalah contoh pemanggilan gambar dari sumber eksternal:</p>
+                        
+                        <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/HTML5_logo_and_wordmark.svg/1920px-HTML5_logo_and_wordmark.svg.png" 
+                                alt="Contoh Gambar Placeholder" 
+                                width="300" 
+                                title="Gambar Ilustrasi Latihan">
+                    </section>
+                    <section>
+                        <h2>Menampilkan Konten Eksternal dengan Iframe</h2>
+                        <p>Berikut adalah contoh menyematkan dokumen/situs lain ke dalam halaman web:</p>
+                    
+                        <iframe src="https://www.wikipedia.org" 
+                                width="100%" 
+                                height="300" 
+                                title="Jendela Wikipedia" 
+                                frameborder="1">
+                        </iframe>
+                    </section>
+                    <br>
+                            </tr>
+                        </table>
+                </main>
+            </td>
+
+    <!-- FOOTER -->
+    <footer>
+        <p align="center">&copy; 2026 NamaWebsite. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
