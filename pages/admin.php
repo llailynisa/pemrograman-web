@@ -20,14 +20,40 @@ mysqli_query($conn, "INSERT IGNORE INTO site_contact_content (id, judul, pengant
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($aksi === 'simpan_beranda') {
         $judul = trim($_POST['judul'] ?? '');
+        $gambar = trim($_POST['gambar_lama'] ?? '');
         $konten = trim($_POST['konten'] ?? '');
         $slug = trim($_POST['slug'] ?? '');
+        if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] !== UPLOAD_ERR_NO_FILE) {
+            if ($_FILES['gambar']['error'] !== UPLOAD_ERR_OK) {
+                $pesan = 'Gambar gagal diunggah.';
+            } else {
+                $infoGambar = @getimagesize($_FILES['gambar']['tmp_name']);
+                $ekstensiGambar = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/gif' => 'gif', 'image/webp' => 'webp'];
+                $tipeGambar = $infoGambar['mime'] ?? '';
+                if (!$infoGambar || !isset($ekstensiGambar[$tipeGambar])) {
+                    $pesan = 'Pilih gambar JPG, PNG, GIF, atau WebP yang valid.';
+                } else {
+                    $folderGambar = __DIR__ . '/../uploads';
+                    if (!is_dir($folderGambar)) mkdir($folderGambar, 0755, true);
+                    $namaGambar = bin2hex(random_bytes(12)) . '.' . $ekstensiGambar[$tipeGambar];
+                    if (move_uploaded_file($_FILES['gambar']['tmp_name'], $folderGambar . '/' . $namaGambar)) {
+                        $gambar = 'uploads/' . $namaGambar;
+                    } else {
+                        $pesan = 'Gambar gagal disimpan ke folder uploads.';
+                    }
+                }
+            }
+        }
+        if ($pesan !== '') {
+            // Tampilkan kembali formulir dengan pesan validasi di bawah.
+        } else {
         $jumlah = mysqli_query($conn, 'SELECT COUNT(*) AS total FROM artikel');
         $adaBaris = $jumlah && (int)mysqli_fetch_assoc($jumlah)['total'] > 0;
-        $stmt = mysqli_prepare($conn, $adaBaris ? 'UPDATE artikel SET judul = ?, konten = ?, slug = ? LIMIT 1' : 'INSERT INTO artikel (judul, konten, slug) VALUES (?, ?, ?)');
-        mysqli_stmt_bind_param($stmt, 'sss', $judul, $konten, $slug);
+        $stmt = mysqli_prepare($conn, $adaBaris ? 'UPDATE artikel SET judul = ?, gambar = ?, konten = ?, slug = ? LIMIT 1' : 'INSERT INTO artikel (judul, gambar, konten, slug) VALUES (?, ?, ?, ?)');
+        mysqli_stmt_bind_param($stmt, 'ssss', $judul, $gambar, $konten, $slug);
         if (mysqli_stmt_execute($stmt)) { header('Location: index.php?modul=admin&pesan=beranda'); exit; }
         $pesan = 'Konten Beranda gagal disimpan.';
+        }
     } elseif ($aksi === 'simpan_profil') {
         $judul = trim($_POST['judul'] ?? '');
         $keterangan = trim($_POST['keterangan'] ?? '');
@@ -116,7 +142,7 @@ if (!$editMhs && ($_GET['aksi'] ?? '') === 'edit') {
 $hasilMhs = mysqli_query($conn, 'SELECT id, nim, nama, prodi, ipk FROM biodata_mhs ORDER BY id DESC');
 $listMhs = $hasilMhs ? mysqli_fetch_all($hasilMhs, MYSQLI_ASSOC) : [];
 $totalMahasiswa = count($listMhs);
-$hasilBeranda = mysqli_query($conn, 'SELECT judul, konten, slug FROM artikel LIMIT 1');
+$hasilBeranda = mysqli_query($conn, 'SELECT judul, gambar, konten, slug FROM artikel LIMIT 1');
 $dataBeranda = $hasilBeranda ? (mysqli_fetch_assoc($hasilBeranda) ?: []) : [];
 $hasilProfil = mysqli_query($conn, 'SELECT judul, keterangan, visi, misi FROM profil LIMIT 1');
 $dataProfil = $hasilProfil ? (mysqli_fetch_assoc($hasilProfil) ?: []) : [];
@@ -133,9 +159,12 @@ $esc = static function ($nilai) { return htmlspecialchars((string)$nilai, ENT_QU
 
 <details open>
   <summary><strong>Edit Beranda</strong></summary>
-  <form method="post" action="index.php?modul=admin">
+  <form method="post" enctype="multipart/form-data" action="index.php?modul=admin">
     <input type="hidden" name="aksi" value="simpan_beranda">
+    <input type="hidden" name="gambar_lama" value="<?php echo $esc($dataBeranda['gambar'] ?? ''); ?>">
     <p><label>Judul<br><input name="judul" required value="<?php echo $esc($dataBeranda['judul'] ?? ''); ?>" style="width:100%; padding:8px; box-sizing:border-box;"></label></p>
+    <p><label>Gambar<br><input type="file" name="gambar" accept="image/jpeg,image/png,image/gif,image/webp" style="width:100%; padding:8px; box-sizing:border-box;"></label></p>
+    <?php if (!empty($dataBeranda['gambar'])): ?><p>Gambar saat ini: <img src="<?php echo $esc($dataBeranda['gambar']); ?>" alt="Gambar beranda" style="max-width:180px; max-height:120px; display:block; margin-top:8px;"></p><?php endif; ?>
     <p><label>Konten<br><textarea name="konten" rows="5" required style="width:100%; padding:8px; box-sizing:border-box;"><?php echo $esc($dataBeranda['konten'] ?? ''); ?></textarea></label></p>
     <p><label>Slug<br><input name="slug" required value="<?php echo $esc($dataBeranda['slug'] ?? ''); ?>" style="width:100%; padding:8px; box-sizing:border-box;"></label></p>
     <button type="submit">Simpan Beranda</button>
